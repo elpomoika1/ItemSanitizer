@@ -1,0 +1,4 @@
+name: ItemSanitizer
+version: '1.0'
+main: me.elpomoika.itemSanitizer.ItemSanitizer
+api-version: '1.19'
