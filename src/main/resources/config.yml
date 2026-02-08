@@ -1,0 +1,13 @@
+items:
+  illegal_helmet:
+    material: DIAMOND_HELMET
+
+    match:
+      display-name: "Helmmet"
+      lore-contains: "tsundere"
+      custom-model-data: 123
+
+    action:
+      type: REPLACE
+      replace-with:
+        material: STONE
