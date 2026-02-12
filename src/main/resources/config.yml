@@ -1,3 +1,5 @@
+check: true
+
 items:
   illegal_helmet:
     material: DIAMOND_HELMET

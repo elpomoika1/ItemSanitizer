@@ -33,6 +33,7 @@ public class ConfigLoader implements ConfigProvider {
     @Override
     public void setup() {
         parseItems();
+        parseValues();
     }
 
     @Override
@@ -42,6 +43,12 @@ public class ConfigLoader implements ConfigProvider {
 
         setup();
     }
+
+    private void parseValues() {
+        this.isCheck = config.getBoolean("check");
+    }
+
+    private boolean isCheck;
 
     private void parseItems() {
         rules.clear();

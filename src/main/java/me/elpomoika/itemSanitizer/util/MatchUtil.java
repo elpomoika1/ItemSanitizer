@@ -43,7 +43,7 @@ public class MatchUtil {
         String expected = rule.lore();
         if (expected == null) return true;
 
-        if (!meta.hasLore()) return false;
+        if (!meta.hasLore() || meta.lore() == null) return false;
 
         return meta.lore().stream()
                 .map(PLAIN::serialize)
