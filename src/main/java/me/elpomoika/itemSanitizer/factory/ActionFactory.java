@@ -18,14 +18,15 @@ public final class ActionFactory {
             case REPLACE -> {
                 Material replaceMaterial = rule.action().replaceMaterial();
                 String replaceCommand = rule.action().replaceCommand();
-                if (replaceMaterial == null || replaceMaterial.isEmpty()) return null;
+                if (replaceMaterial != null && !replaceMaterial.isEmpty()) {
+                    return new ItemStack(replaceMaterial, item.getAmount());
+                }
 
                 if (replaceCommand != null && !replaceCommand.isBlank()) {
                     String command = replaceCommand.replace("%player%", player.getName());
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                    return null;
                 }
-
-                return new ItemStack(replaceMaterial, item.getAmount());
             }
         }
 
