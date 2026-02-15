@@ -6,5 +6,6 @@ import javax.annotation.Nullable;
 
 public record ActionRule(
         ActionType type,
-        @Nullable Material replaceMaterial
+        @Nullable Material replaceMaterial,
+        @Nullable String replaceCommand
 ) {}

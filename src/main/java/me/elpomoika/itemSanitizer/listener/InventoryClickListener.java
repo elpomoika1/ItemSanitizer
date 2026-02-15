@@ -1,7 +1,8 @@
 package me.elpomoika.itemSanitizer.listener;
 
 import lombok.RequiredArgsConstructor;
-import me.elpomoika.itemSanitizer.config.ConfigLoader;
+import me.elpomoika.itemSanitizer.config.MainConfig;
+import me.elpomoika.itemSanitizer.registry.ItemRuleRegistry;
 import me.elpomoika.itemSanitizer.util.InventoryCleaner;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,12 +13,13 @@ import org.bukkit.inventory.ItemStack;
 
 @RequiredArgsConstructor
 public class InventoryClickListener implements Listener {
-    private final ConfigLoader configLoader;
+    private final MainConfig config;
+    private final ItemRuleRegistry ruleRegistry;
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!configLoader.isCheck()) return;
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (!config.isCheck()) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
 
         Inventory clicked = event.getClickedInventory();
         if (clicked == null) return;
@@ -26,11 +28,11 @@ public class InventoryClickListener implements Listener {
             ItemStack item = event.getCurrentItem();
             if (item == null) return;
 
-            ItemStack result = InventoryCleaner.processItem(item, configLoader.getRules().values());
+            ItemStack result = InventoryCleaner.processItem(item, ruleRegistry.getRules(), player);
 
             if (result == null) {
-                event.setCancelled(true);
                 clicked.setItem(event.getSlot(), null);
+                event.setCancelled(true);
                 return;
             }
 

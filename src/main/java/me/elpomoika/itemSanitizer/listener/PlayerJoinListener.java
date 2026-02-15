@@ -1,35 +1,31 @@
 package me.elpomoika.itemSanitizer.listener;
 
 import lombok.RequiredArgsConstructor;
-import me.elpomoika.itemSanitizer.config.ConfigLoader;
+import me.elpomoika.itemSanitizer.config.MainConfig;
 import me.elpomoika.itemSanitizer.entity.ItemRule;
-import me.elpomoika.itemSanitizer.entity.action.ActionRule;
-import me.elpomoika.itemSanitizer.entity.action.ActionType;
+import me.elpomoika.itemSanitizer.registry.ItemRuleRegistry;
 import me.elpomoika.itemSanitizer.util.InventoryCleaner;
-import me.elpomoika.itemSanitizer.util.MatchUtil;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 
 @RequiredArgsConstructor
 public class PlayerJoinListener implements Listener {
-    private final ConfigLoader config;
+    private final MainConfig config;
+    private final ItemRuleRegistry ruleRegistry;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         if (!config.isCheck()) return;
         Player player = event.getPlayer();
 
-        final Collection<ItemRule> rules = config.getRules().values();
+        final Collection<ItemRule> rules = ruleRegistry.getRules();
 
-        InventoryCleaner.cleanInventory(player.getInventory(), rules);
-        InventoryCleaner.cleanInventory(player.getEnderChest(), rules);
+        InventoryCleaner.cleanInventory(player, player.getInventory(), rules);
+        InventoryCleaner.cleanInventory(player, player.getEnderChest(), rules);
     }
 }
