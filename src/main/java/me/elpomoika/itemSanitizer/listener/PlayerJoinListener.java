@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.elpomoika.itemSanitizer.config.MainConfig;
 import me.elpomoika.itemSanitizer.entity.ItemRule;
 import me.elpomoika.itemSanitizer.registry.ItemRuleRegistry;
-import me.elpomoika.itemSanitizer.util.InventoryCleaner;
+import me.elpomoika.itemSanitizer.inventory.InventoryRuleProcessor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +17,7 @@ import java.util.Collection;
 public class PlayerJoinListener implements Listener {
     private final MainConfig config;
     private final ItemRuleRegistry ruleRegistry;
+    private final InventoryRuleProcessor ruleProcessor;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
@@ -25,7 +26,7 @@ public class PlayerJoinListener implements Listener {
 
         final Collection<ItemRule> rules = ruleRegistry.getRules();
 
-        InventoryCleaner.cleanInventory(player, player.getInventory(), rules);
-        InventoryCleaner.cleanInventory(player, player.getEnderChest(), rules);
+        ruleProcessor.cleanInventory(player, player.getInventory(), rules);
+        ruleProcessor.cleanInventory(player, player.getEnderChest(), rules);
     }
 }

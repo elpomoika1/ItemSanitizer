@@ -3,7 +3,7 @@ package me.elpomoika.itemSanitizer.listener;
 import lombok.RequiredArgsConstructor;
 import me.elpomoika.itemSanitizer.config.MainConfig;
 import me.elpomoika.itemSanitizer.registry.ItemRuleRegistry;
-import me.elpomoika.itemSanitizer.util.InventoryCleaner;
+import me.elpomoika.itemSanitizer.inventory.InventoryRuleProcessor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 public class InventoryClickListener implements Listener {
     private final MainConfig config;
     private final ItemRuleRegistry ruleRegistry;
+    private final InventoryRuleProcessor ruleProcessor;
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
@@ -28,7 +29,7 @@ public class InventoryClickListener implements Listener {
             ItemStack item = event.getCurrentItem();
             if (item == null) return;
 
-            ItemStack result = InventoryCleaner.processItem(item, ruleRegistry.getRules(), player);
+            ItemStack result = ruleProcessor.applyRules(item, ruleRegistry.getRules(), player);
 
             if (result == null) {
                 clicked.setItem(event.getSlot(), null);

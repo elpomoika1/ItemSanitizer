@@ -4,9 +4,11 @@ import co.aikar.commands.PaperCommandManager;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.serdes.okaeri.SerdesOkaeriBukkit;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
-import lombok.Getter;
 import me.elpomoika.itemSanitizer.command.SanitizerCommand;
 import me.elpomoika.itemSanitizer.config.MainConfig;
+import me.elpomoika.itemSanitizer.inventory.InventoryRuleProcessor;
+import me.elpomoika.itemSanitizer.inventory.ItemRuleApplier;
+import me.elpomoika.itemSanitizer.inventory.ItemRuleMatcher;
 import me.elpomoika.itemSanitizer.listener.InventoryClickListener;
 import me.elpomoika.itemSanitizer.listener.PickupListener;
 import me.elpomoika.itemSanitizer.listener.PlayerJoinListener;
@@ -15,26 +17,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-@Getter
 public final class ItemSanitizer extends JavaPlugin {
-    private PaperCommandManager commandManager;
     private MainConfig mainConfig;
     private ItemRuleRegistry ruleRegistry;
+
+    private final PaperCommandManager commandManager = new PaperCommandManager(this);
 
     @Override
     public void onEnable() {
         initConfig();
-        this.commandManager = new PaperCommandManager(this);
-
+        initCommands();
         registerBukkitListeners();
-
-        commandManager.registerCommand(new SanitizerCommand(mainConfig, ruleRegistry));
     }
 
     private void registerBukkitListeners() {
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(mainConfig, ruleRegistry), this);
-        getServer().getPluginManager().registerEvents(new PickupListener(mainConfig, ruleRegistry), this);
-        getServer().getPluginManager().registerEvents(new InventoryClickListener(mainConfig, ruleRegistry), this);
+        InventoryRuleProcessor ruleProcessor = createRuleProcessor();
+
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(mainConfig, ruleRegistry, ruleProcessor), this);
+        getServer().getPluginManager().registerEvents(new PickupListener(mainConfig, ruleRegistry, ruleProcessor), this);
+        getServer().getPluginManager().registerEvents(new InventoryClickListener(mainConfig, ruleRegistry, ruleProcessor), this);
+    }
+
+    private void initCommands() {
+        commandManager.registerCommand(new SanitizerCommand(mainConfig, ruleRegistry));
     }
 
     private void initConfig() {
@@ -51,5 +56,9 @@ public final class ItemSanitizer extends JavaPlugin {
 
         this.ruleRegistry = new ItemRuleRegistry();
         ruleRegistry.load(mainConfig);
+    }
+
+    private InventoryRuleProcessor createRuleProcessor() {
+        return new InventoryRuleProcessor(new ItemRuleMatcher(), new ItemRuleApplier());
     }
 }

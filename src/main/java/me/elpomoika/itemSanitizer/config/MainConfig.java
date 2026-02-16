@@ -2,6 +2,8 @@ package me.elpomoika.itemSanitizer.config;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
+import eu.okaeri.configs.annotation.CustomKey;
+import eu.okaeri.configs.annotation.Header;
 import lombok.Getter;
 import lombok.Setter;
 import me.elpomoika.itemSanitizer.entity.action.ActionType;
@@ -23,6 +25,7 @@ public class MainConfig extends OkaeriConfig {
 
     @Getter @Setter
     public static class ItemsConfig extends OkaeriConfig {
+        @Comment("material of target item")
         private String targetMaterial = "NETHERITE_SWORD";
 
         private MatchConfig match = new MatchConfig();
@@ -37,15 +40,19 @@ public class MainConfig extends OkaeriConfig {
             action.setReplaceMaterial("");
         }
 
+        @Header("It works like AND. Example: (displayName) AND (lore) AND (custom-model-data) if true -> do action")
         @Getter @Setter
-        public static class MatchConfig implements Serializable {
+        public static class MatchConfig extends OkaeriConfig {
+            @CustomKey("displayname")
             private String displayName;
+            @CustomKey("lore")
             private String loreContains;
+            @CustomKey("custom-model-data")
             private Integer customModalData;
         }
 
         @Getter @Setter
-        public static class ActionConfig extends OkaeriConfig {
+        public static class ActionConfig implements Serializable {
             private ActionType type = ActionType.REPLACE;
             private String replaceMaterial;
             private String replaceCommand;

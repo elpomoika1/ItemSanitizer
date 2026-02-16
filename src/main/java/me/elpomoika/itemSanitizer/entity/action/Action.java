@@ -4,7 +4,7 @@ import org.bukkit.Material;
 
 import javax.annotation.Nullable;
 
-public record ActionRule(
+public record Action(
         ActionType type,
         @Nullable Material replaceMaterial,
         @Nullable String replaceCommand

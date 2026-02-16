@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import me.elpomoika.itemSanitizer.config.MainConfig;
 import me.elpomoika.itemSanitizer.entity.ItemRule;
 import me.elpomoika.itemSanitizer.entity.MatchRule;
-import me.elpomoika.itemSanitizer.entity.action.ActionRule;
+import me.elpomoika.itemSanitizer.entity.action.Action;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public final class ItemRuleRegistry {
             Material material = Material.valueOf(item.getTargetMaterial());
 
             MatchRule match = parseMatch(item.getMatch());
-            ActionRule action = parseAction(item.getAction());
+            Action action = parseAction(item.getAction());
 
             rules.add(new ItemRule(material, match, action));
         }
@@ -39,11 +39,11 @@ public final class ItemRuleRegistry {
         return new MatchRule(displayName, loreContains, customModelData);
     }
 
-    private static ActionRule parseAction(MainConfig.ItemsConfig.ActionConfig action) {
+    private static Action parseAction(MainConfig.ItemsConfig.ActionConfig action) {
         Material replace = action.getReplaceMaterial() == null || action.getReplaceMaterial().isBlank()
                 ? null
                 : Material.valueOf(action.getReplaceMaterial());
 
-        return new ActionRule(action.getType(), replace, action.getReplaceCommand());
+        return new Action(action.getType(), replace, action.getReplaceCommand());
     }
 }

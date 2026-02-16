@@ -9,7 +9,7 @@ import me.elpomoika.itemSanitizer.config.MainConfig;
 import me.elpomoika.itemSanitizer.registry.ItemRuleRegistry;
 import org.bukkit.command.CommandSender;
 
-@CommandAlias("sanitizer")
+@CommandAlias("sanitizer|is|itemsanitizer")
 @CommandPermission("sanitizer.admin")
 @RequiredArgsConstructor
 public class SanitizerCommand extends BaseCommand {

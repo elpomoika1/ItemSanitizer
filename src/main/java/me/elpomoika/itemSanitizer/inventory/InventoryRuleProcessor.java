@@ -1,16 +1,18 @@
-package me.elpomoika.itemSanitizer.util;
+package me.elpomoika.itemSanitizer.inventory;
 
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
 import me.elpomoika.itemSanitizer.entity.ItemRule;
-import me.elpomoika.itemSanitizer.factory.ActionFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 
-@UtilityClass
-public final class InventoryCleaner {
+@RequiredArgsConstructor
+public final class InventoryRuleProcessor {
+    private final ItemRuleMatcher ruleMatcher;
+    private final ItemRuleApplier ruleApplier;
+
     public void cleanInventory(Player player, Inventory inventory, Collection<ItemRule> rules) {
         if (inventory == null) return;
 
@@ -18,18 +20,18 @@ public final class InventoryCleaner {
             ItemStack item = inventory.getItem(slot);
             if (item == null) continue;
 
-            ItemStack result = processItem(item, rules, player);
+            ItemStack result = applyRules(item, rules, player);
             if (result != item) {
                 inventory.setItem(slot, result);
             }
         }
     }
 
-    public ItemStack processItem(ItemStack item, Collection<ItemRule> rules, Player player) {
+    public ItemStack applyRules(ItemStack item, Collection<ItemRule> rules, Player player) {
         for (ItemRule rule : rules) {
-            if (!MatchUtil.matches(item, rule)) continue;
+            if (!ruleMatcher.matchesRule(item, rule)) continue;
 
-            return ActionFactory.applyAction(item, rule, player);
+            return ruleApplier.apply(item, rule, player);
         }
         return item;
     }

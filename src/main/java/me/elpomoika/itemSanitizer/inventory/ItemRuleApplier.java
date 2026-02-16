@@ -1,15 +1,13 @@
-package me.elpomoika.itemSanitizer.factory;
+package me.elpomoika.itemSanitizer.inventory;
 
-import lombok.experimental.UtilityClass;
 import me.elpomoika.itemSanitizer.entity.ItemRule;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@UtilityClass
-public final class ActionFactory {
-    public ItemStack applyAction(ItemStack item, ItemRule rule, Player player) {
+public final class ItemRuleApplier {
+    public ItemStack apply(ItemStack item, ItemRule rule, Player player) {
         switch (rule.action().type()) {
             case REMOVE -> {
                 return null;
