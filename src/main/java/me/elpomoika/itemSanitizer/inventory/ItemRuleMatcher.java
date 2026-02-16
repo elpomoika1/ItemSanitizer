@@ -7,6 +7,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
+
 public final class ItemRuleMatcher {
     public boolean matchesRule(ItemStack item, ItemRule rule) {
         if (item == null) return false;
@@ -36,15 +38,23 @@ public final class ItemRuleMatcher {
     }
 
     private boolean matchLore(MatchRule rule, ItemMeta meta) {
-        if (meta == null) return false;
-        String expected = rule.lore();
-        if (expected == null) return true;
+        List<String> expected = rule.lore();
+        if (expected == null || expected.isEmpty()) return true;
 
-        if (!meta.hasLore() || meta.lore() == null) return false;
+        if (meta == null || !meta.hasLore()) return false;
 
-        return meta.lore().stream()
+        List<Component> actualLore = meta.lore();
+        if (actualLore == null) return false;
+
+        List<String> plainLore = actualLore.stream()
                 .map(ComponentTextUtil::toPlain)
-                .anyMatch(line -> line.contains(expected));
+                .toList();
+
+        return expected.stream().allMatch(expectedLine ->
+                plainLore.stream().anyMatch(actualLine ->
+                        actualLine.contains(expectedLine)
+                )
+        );
     }
 
     private boolean matchCustomModelData(MatchRule rule, ItemMeta meta) {

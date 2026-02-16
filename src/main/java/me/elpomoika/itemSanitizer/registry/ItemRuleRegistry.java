@@ -33,7 +33,7 @@ public final class ItemRuleRegistry {
         if (match == null) return null;
 
         String displayName = match.getDisplayName();
-        String loreContains = match.getLoreContains();
+        List<String> loreContains = match.getLoreContains();
         Integer customModelData = match.getCustomModalData();
 
         return new MatchRule(displayName, loreContains, customModelData);

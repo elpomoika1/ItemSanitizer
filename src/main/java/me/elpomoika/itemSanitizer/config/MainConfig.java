@@ -10,6 +10,7 @@ import me.elpomoika.itemSanitizer.entity.action.ActionType;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -33,7 +34,7 @@ public class MainConfig extends OkaeriConfig {
 
         public ItemsConfig() {
             match.setDisplayName("tsundere");
-            match.setLoreContains("dada");
+            match.setLoreContains(List.of("dada", "nana"));
             match.setCustomModalData(123123123);
 
             action.setReplaceCommand("give %player% diamond 1");
@@ -46,7 +47,7 @@ public class MainConfig extends OkaeriConfig {
             @CustomKey("displayname")
             private String displayName;
             @CustomKey("lore")
-            private String loreContains;
+            private List<String> loreContains;
             @CustomKey("custom-model-data")
             private Integer customModalData;
         }
