@@ -2,8 +2,10 @@ package me.elpomoika.itemSanitizer;
 
 import co.aikar.commands.PaperCommandManager;
 import eu.okaeri.configs.ConfigManager;
-import eu.okaeri.configs.serdes.okaeri.SerdesOkaeriBukkit;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
+import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
+import eu.okaeri.configs.yaml.bukkit.serdes.itemstack.ItemStackFailsafe;
+import eu.okaeri.configs.yaml.bukkit.serdes.serializer.ItemStackSerializer;
 import me.elpomoika.itemSanitizer.command.SanitizerCommand;
 import me.elpomoika.itemSanitizer.config.MainConfig;
 import me.elpomoika.itemSanitizer.inventory.InventoryRuleProcessor;
@@ -13,6 +15,7 @@ import me.elpomoika.itemSanitizer.listener.InventoryClickListener;
 import me.elpomoika.itemSanitizer.listener.PickupListener;
 import me.elpomoika.itemSanitizer.listener.PlayerJoinListener;
 import me.elpomoika.itemSanitizer.registry.ItemRuleRegistry;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -46,7 +49,8 @@ public final class ItemSanitizer extends JavaPlugin {
     private void initConfig() {
         this.mainConfig = ConfigManager.create(MainConfig.class, it -> {
             it.configure(opt -> {
-                opt.configurer(new YamlBukkitConfigurer(), new SerdesOkaeriBukkit());
+                opt.configurer(new YamlBukkitConfigurer(), new SerdesBukkit());
+                opt.serdes(registry -> registry.registerExclusive(ItemStack.class, new ItemStackSerializer(ItemStackFailsafe.BUKKIT)));
                 opt.bindFile(new File(this.getDataFolder(), "config.yml"));
                 opt.removeOrphans(true);
                 opt.resolvePlaceholders();

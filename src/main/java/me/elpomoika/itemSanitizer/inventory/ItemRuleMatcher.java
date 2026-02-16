@@ -12,9 +12,13 @@ import java.util.List;
 public final class ItemRuleMatcher {
     public boolean matchesRule(ItemStack item, ItemRule rule) {
         if (item == null) return false;
-        if (item.getType() != rule.material()) return false;
 
-        MatchRule match = rule.match();
+        if (rule.getItemStack() != null)
+            return item.isSimilar(rule.getItemStack());
+
+        if (item.getType() != rule.getMaterial()) return false;
+
+        MatchRule match = rule.getMatch();
         if (match == null) return true;
 
         ItemMeta meta = item.getItemMeta();
@@ -27,7 +31,7 @@ public final class ItemRuleMatcher {
     }
 
     private boolean matchDisplayName(MatchRule rule, ItemMeta meta) {
-        String expected = rule.displayName();
+        String expected = rule.getDisplayName();
         if (expected == null) return true;
 
         Component name = meta.displayName();
@@ -38,7 +42,7 @@ public final class ItemRuleMatcher {
     }
 
     private boolean matchLore(MatchRule rule, ItemMeta meta) {
-        List<String> expected = rule.lore();
+        List<String> expected = rule.getLore();
         if (expected == null || expected.isEmpty()) return true;
 
         if (meta == null || !meta.hasLore()) return false;
@@ -58,7 +62,7 @@ public final class ItemRuleMatcher {
     }
 
     private boolean matchCustomModelData(MatchRule rule, ItemMeta meta) {
-        Integer cmd = rule.customModelData();
+        Integer cmd = rule.getCustomModelData();
         if (cmd == null) return true;
 
         return meta.hasCustomModelData()
