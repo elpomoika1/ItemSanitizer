@@ -21,7 +21,7 @@ public final class ItemSanitizer extends JavaPlugin {
     private MainConfig mainConfig;
     private ItemRuleRegistry ruleRegistry;
 
-    private final PaperCommandManager commandManager = new PaperCommandManager(this);
+    private PaperCommandManager commandManager;
 
     @Override
     public void onEnable() {
@@ -39,6 +39,7 @@ public final class ItemSanitizer extends JavaPlugin {
     }
 
     private void initCommands() {
+        this.commandManager = new PaperCommandManager(this);
         commandManager.registerCommand(new SanitizerCommand(mainConfig, ruleRegistry));
     }
 
