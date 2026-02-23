@@ -8,14 +8,14 @@ import org.bukkit.inventory.ItemStack;
 
 public final class ItemRuleApplier {
     public ItemStack apply(ItemStack item, ItemRule rule, Player player) {
-        switch (rule.action().type()) {
+        switch (rule.getAction().getType()) {
             case REMOVE -> {
                 return null;
             }
 
             case REPLACE -> {
-                Material replaceMaterial = rule.action().replaceMaterial();
-                String replaceCommand = rule.action().replaceCommand();
+                Material replaceMaterial = rule.getAction().getReplaceMaterial();
+                String replaceCommand = rule.getAction().getReplaceCommand();
                 if (replaceMaterial != null && !replaceMaterial.isEmpty()) {
                     return new ItemStack(replaceMaterial, item.getAmount());
                 }
